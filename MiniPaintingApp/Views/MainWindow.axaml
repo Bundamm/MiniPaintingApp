@@ -15,6 +15,20 @@
         <vm:MainViewModel />
     </Design.DataContext>
 
-    <Button>Calculate</Button>
-
+    <!-- <Image Source="{Binding Image}" MaxWidth="400" Stretch="UniformToFill"/> -->
+    <Grid HorizontalAlignment="Right"
+          VerticalAlignment="Center"
+          RowSpacing="20"
+          Margin="50"
+          RowDefinitions="Auto, *, Auto" ColumnDefinitions="Auto, *, *">
+        <Panel Grid.Row="0" Grid.Column="0">
+            <Rectangle Margin="20" Height = "300" Width="200" Fill="LightGray"></Rectangle>
+            <Image Source="{Binding ImageView.Image}" MaxWidth="400" Stretch="Uniform"/>
+        </Panel>
+       
+        <Button Grid.Row="1" Grid.Column="0"
+            Command="{Binding LoadImageCommand}">
+            Upload Image
+        </Button>
+    </Grid>
 </Window>

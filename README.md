@@ -10,7 +10,7 @@ A tool for choosing and mixing paints for miniature painting.
 - Canvas for testing picked paints
 
 ### Status
-Early phase - project setup, learning Avalonia/MVVM
+Image upload works, added a single button and a panel for the image. Dropper and other functionalities still in the planning phase.
 
 ### Stack
 - C# / .NET
