@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using MiniPaintingApp.Services;
 using MiniPaintingApp.ViewModels;
 using MiniPaintingApp.Views;
 
@@ -19,7 +20,11 @@ public partial class App : Application
         {
             desktop.MainWindow = new MainWindow
             {
-                DataContext = new MainViewModel(),
+                DataContext = new MainViewModel(
+                    new ImageViewModel(
+                        new ImageManipulationService()
+                        )
+                    ),
             };
         }
 

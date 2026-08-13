@@ -8,5 +8,5 @@ public class ImageModel
     public string? ImagePath { get; set; }
     
     // Bitmap of the image
-    public Bitmap? Image { get; set; }
+    public WriteableBitmap? Image { get; set; }
 }

@@ -7,7 +7,9 @@
         x:Class="MiniPaintingApp.Views.MainWindow"
         x:DataType="vm:MainViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="MiniPaintingApp">
+        Title="MiniPaintingApp"
+        Width="1250"
+        Height="800">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -18,17 +20,38 @@
     <!-- <Image Source="{Binding Image}" MaxWidth="400" Stretch="UniformToFill"/> -->
     <Grid HorizontalAlignment="Right"
           VerticalAlignment="Center"
-          RowSpacing="20"
-          Margin="50"
-          RowDefinitions="Auto, *, Auto" ColumnDefinitions="Auto, *, *">
+          Margin="5"
+          
+          RowDefinitions="Auto, *, Auto" ColumnDefinitions="Auto, *, Auto">
         <Panel Grid.Row="0" Grid.Column="0">
-            <Rectangle Margin="20" Height = "300" Width="200" Fill="LightGray"></Rectangle>
-            <Image Source="{Binding ImageView.Image}" MaxWidth="400" Stretch="Uniform"/>
+
+                <Rectangle Margin="15" Height = "700" Width="600" Fill="LightGray"/>
+                <Image Source="{Binding ImageView.WriteableImage}" Margin="20" MaxWidth="550" MaxHeight="650" Stretch="Uniform" PointerPressed="PointerPressedHandler"/>
         </Panel>
-       
-        <Button Grid.Row="1" Grid.Column="0"
-            Command="{Binding LoadImageCommand}">
-            Upload Image
-        </Button>
+        <Panel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center">
+            <Grid HorizontalAlignment="Left"
+                  VerticalAlignment="Center"
+                  Margin="5"
+                  RowDefinitions="*" ColumnDefinitions="*, *, *, *"
+                  ColumnSpacing="15"
+                  RowSpan="10"
+                  ColumnSpan="10">
+                <Button Command="{Binding LoadImageCommand}" Grid.Row="0" Grid.Column="0">
+                    Upload Image
+                </Button>
+                <Button Grid.Row="0" Grid.Column="1">
+                    Dropper
+                </Button>
+                <Panel Grid.Row="0" Grid.Column="2">
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"> TUTAJ BĘDZIE KOLOR</TextBlock>
+                </Panel>
+                <Panel Grid.Row="0" Grid.Column="3" >
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
+                        Tutaj Będzie HEXCODE
+                    </TextBlock >
+                </Panel>
+            </Grid>
+        </Panel>
+        
     </Grid>
 </Window>
