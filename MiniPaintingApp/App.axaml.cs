@@ -22,7 +22,7 @@ public partial class App : Application
             {
                 DataContext = new MainViewModel(
                     new ImageViewModel(
-                        new ImageManipulationService()
+                        new ImageInformationExtractionService()
                         )
                     ),
             };

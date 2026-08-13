@@ -4,7 +4,7 @@ using MiniPaintingApp.Interfaces;
 
 namespace MiniPaintingApp.Services;
 
-public class ImageManipulationService : IImageManipulationService
+public class ImageInformationExtractionService : IImageInformationExtractionService
 {
     /// <summary>
     /// Transforms the cursor coordinates into the exact coordinates on the loaded image.

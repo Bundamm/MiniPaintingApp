@@ -8,7 +8,7 @@ using MiniPaintingApp.Models;
 
 namespace MiniPaintingApp.ViewModels;
 
-public partial class ImageViewModel(IImageManipulationService imageManipulationService) : ViewModelBase
+public partial class ImageViewModel(IImageInformationExtractionService imageInformationExtractionService) : ViewModelBase
 {
     /// <summary>
     /// Gets or sets the content of the Image.
@@ -55,7 +55,7 @@ public partial class ImageViewModel(IImageManipulationService imageManipulationS
         {
             throw new InvalidOperationException("Image is null");
         }
-        Point imagePoint = imageManipulationService.ConvertCursorLocationToPixelLocation(cursorPoint, this.WriteableImage);
+        Point imagePoint = imageInformationExtractionService.ConvertCursorLocationToPixelLocation(cursorPoint, this.WriteableImage);
     }
     
 }
