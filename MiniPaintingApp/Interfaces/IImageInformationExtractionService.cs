@@ -5,5 +5,5 @@ namespace MiniPaintingApp.Interfaces;
 
 public interface IImageInformationExtractionService
 {
-    public Point ConvertCursorLocationToPixelLocation(Point locationPoint, WriteableBitmap bitmap);
+    public Point ConvertCursorLocationToPixelLocation(Point locationPoint, Point currentImageSize, WriteableBitmap bitmap);
 }

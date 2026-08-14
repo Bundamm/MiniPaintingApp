@@ -23,7 +23,7 @@
           Margin="5"
           
           RowDefinitions="Auto, *, Auto" ColumnDefinitions="Auto, *, Auto">
-        <Panel Grid.Row="0" Grid.Column="0">
+        <Panel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch">
 
                 <Rectangle Margin="15" Height = "700" Width="600" Fill="LightGray"/>
                 <Image Source="{Binding ImageView.WriteableImage}" Margin="20" MaxWidth="550" MaxHeight="650" Stretch="Uniform" PointerPressed="PointerPressedHandler"/>

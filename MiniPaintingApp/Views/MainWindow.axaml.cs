@@ -19,17 +19,21 @@ public partial class MainWindow : Window
     public void PointerPressedHandler(object sender, PointerPressedEventArgs args)
     {
         var point = args.GetCurrentPoint(sender as Control);
-
         var x = point.Position.X;
         var y = point.Position.Y;
+        
         if (point.Properties.IsLeftButtonPressed)
         {
-            Console.WriteLine($"Cursor Location: {x}, {y}");
-            
-            // imageViewModel.ConvertPointCoordinatesToActualImagePixels(new Point(x, y));
-            if (DataContext is MainViewModel mainView)
+            if (sender is Image image)
             {
-                mainView.ImageView.ConvertPointCoordinatesToActualImagePixels(new Point(x, y));
+                double width = image.Bounds.Width;
+                double height = image.Bounds.Height;
+                Console.WriteLine($"Cursor Location: {x}, {y}, Image Size: {Math.Round(image.Bounds.Width, 2)}, {Math.Round(image.Bounds.Height, 2)}");
+
+                if (DataContext is MainViewModel mainView)
+                {
+                    mainView.ImageView.ConvertPointCoordinatesToActualImagePixels(new Point(x, y), new Point(width, height));
+                }
             }
         }
     }

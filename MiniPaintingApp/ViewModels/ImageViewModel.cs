@@ -48,14 +48,15 @@ public partial class ImageViewModel(IImageInformationExtractionService imageInfo
     /// Uses the coordinates data from the MainWindowView and passes it on to ImageManipulationService which calculates the exact coordinates on the loaded image.
     /// </summary>
     /// <param name="cursorPoint"></param>
+    /// <param name="imageSize"></param>
     /// <exception cref="InvalidOperationException"></exception>
-    public void ConvertPointCoordinatesToActualImagePixels(Point cursorPoint)
+    public void ConvertPointCoordinatesToActualImagePixels(Point cursorPoint, Point imageSize)
     {
         if (this.WriteableImage is null)
         {
             throw new InvalidOperationException("Image is null");
         }
-        Point imagePoint = imageInformationExtractionService.ConvertCursorLocationToPixelLocation(cursorPoint, this.WriteableImage);
+        Point imagePoint = imageInformationExtractionService.ConvertCursorLocationToPixelLocation(cursorPoint, imageSize, this.WriteableImage);
+        Console.WriteLine($"Location on original image: {imagePoint.X}, {imagePoint.Y}");
     }
-    
 }

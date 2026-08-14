@@ -57,7 +57,4 @@ public partial class MainViewModel : ViewModelBase
             Console.WriteLine(ImageView.WriteableImage.PixelSize);
         }
     }
-    
-    
-    
 }
