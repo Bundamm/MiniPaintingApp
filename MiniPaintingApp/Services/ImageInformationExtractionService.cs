@@ -1,21 +1,16 @@
 using System;
 using System.IO;
 using Avalonia;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
-using Avalonia.Media.Immutable;
+
 using MiniPaintingApp.Interfaces;
 using SkiaSharp;
 
 namespace MiniPaintingApp.Services;
 
 public class ImageInformationExtractionService : IImageInformationExtractionService {
-    /// <summary>
-    /// Transforms the cursor coordinates into the exact coordinates on the loaded image.
-    /// </summary>
-    /// <param name="locationPoint"></param>
-    /// <param name="currentImageSize"></param>
-    /// <param name="bitmap"></param>
-    /// <returns></returns>
+
     public Point ConvertCursorLocationToPixelLocation(Point locationPoint, Point currentImageSize, WriteableBitmap bitmap)
     {
         var bitmapWidth = bitmap.Size.Width;
@@ -29,18 +24,25 @@ public class ImageInformationExtractionService : IImageInformationExtractionServ
         Console.WriteLine($"X Scale: {scaleWidth}, Y Scale: {scaleHeight}, Bitmap Width: {bitmapWidth}, Bitmap Height: {bitmapHeight} Current Image Width: {currentImageWidth}, Current Image Height: {currentImageHeight}");
         var originalBitmapPoint = new Point(Math.Round(locationPoint.X * scaleWidth), Math.Round(locationPoint.Y * scaleHeight));
         
-        SKColor colorAtPixel = ExtractColorFromBitmap(bitmap, originalBitmapPoint); 
-        Console.WriteLine($"Color at pixel: {colorAtPixel}");
         return originalBitmapPoint;
     }
-
-    public SKColor ExtractColorFromBitmap(Bitmap bitmap, Point exactPointOnImage)
+    
+    public Color ExtractColorFromBitmap(WriteableBitmap bitmap, Point exactPointOnImage)
     {
         MemoryStream stream = new MemoryStream();
         bitmap.Save(stream, options: new PngBitmapEncoderOptions());
         stream.Position = 0;
         SKBitmap skBitmap = SKBitmap.Decode(stream);
         SKColor colorAtPosition = skBitmap.GetPixel((int)exactPointOnImage.X, (int)exactPointOnImage.Y);
-        return colorAtPosition;
+        byte red = colorAtPosition.Red;
+        byte green = colorAtPosition.Green;
+        byte blue = colorAtPosition.Blue;
+        byte alpha = colorAtPosition.Alpha;
+        return new Color(alpha, red, green, blue);
+    }
+    
+    public IBrush ConvertColorToBrush(Color color)
+    {
+        return new SolidColorBrush(color);
     }
 }

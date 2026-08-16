@@ -43,7 +43,7 @@
                     Dropper
                 </Button>
                 <Panel Grid.Row="0" Grid.Column="2">
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"> TUTAJ BĘDZIE KOLOR</TextBlock>
+                    <Rectangle Margin="15" Width="80" Height="28" Fill="{Binding ImageView.ColoredBrush}"/>
                 </Panel>
                 <Panel Grid.Row="0" Grid.Column="3" >
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">

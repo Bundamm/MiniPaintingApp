@@ -1,5 +1,6 @@
 using System;
 using Avalonia;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using MiniPaintingApp.Interfaces;
@@ -10,22 +11,25 @@ namespace MiniPaintingApp.ViewModels;
 
 public partial class ImageViewModel(IImageInformationExtractionService imageInformationExtractionService) : ViewModelBase
 {
-    /// <summary>
-    /// Gets or sets the content of the Image.
-    /// </summary>
+
     [ObservableProperty]
     public partial WriteableBitmap? WriteableImage { get; set; }
     
-    /// <summary>
-    /// Gets or sets the path of the Image.
-    /// </summary>
+    [ObservableProperty]
+    public partial bool DropperIsEnabled { get; set; }
+    
+    [ObservableProperty]
+    public partial Color ColorValue {get; set;}
+    
+    [ObservableProperty]
+    public partial IBrush ColoredBrush {get; set;}
+    
+    [ObservableProperty]
+    public partial Point OriginalPoint { get; set; }
+
     [ObservableProperty]
     public partial string? ImagePath { get; set; }
     
-    /// <summary>
-    /// Converts data from ImageViewModel into an ImageModel and returns it.
-    /// </summary>
-    /// <returns>ImageModel</returns>
     public ImageModel ToImageModel()
     {
         return new ImageModel()
@@ -34,23 +38,13 @@ public partial class ImageViewModel(IImageInformationExtractionService imageInfo
             Image = this.WriteableImage
         };
     }
-
-    /// <summary>
-    /// Returns the WriteableBitmap property.
-    /// </summary>
-    /// <returns></returns>
+    
     public WriteableBitmap? GetImage()
     {
         return this.WriteableImage;
     }
-
-    /// <summary>
-    /// Uses the coordinates data from the MainWindowView and passes it on to ImageManipulationService which calculates the exact coordinates on the loaded image.
-    /// </summary>
-    /// <param name="cursorPoint"></param>
-    /// <param name="imageSize"></param>
-    /// <exception cref="InvalidOperationException"></exception>
-    public void ConvertPointCoordinatesToActualImagePixels(Point cursorPoint, Point imageSize)
+    
+    public Point ConvertPointCoordinatesToActualImagePixels(Point cursorPoint, Point imageSize)
     {
         if (this.WriteableImage is null)
         {
@@ -58,5 +52,21 @@ public partial class ImageViewModel(IImageInformationExtractionService imageInfo
         }
         Point imagePoint = imageInformationExtractionService.ConvertCursorLocationToPixelLocation(cursorPoint, imageSize, this.WriteableImage);
         Console.WriteLine($"Location on original image: {imagePoint.X}, {imagePoint.Y}");
+        OriginalPoint = imagePoint;
+        SetColorValue(OriginalPoint);
+        return imagePoint;
+    }
+    
+    public void SetColorValue(Point actualPoint)
+    {
+        if (this.WriteableImage is null)
+        {
+            throw new InvalidOperationException("Image is null");
+        }
+        Color color = imageInformationExtractionService.ExtractColorFromBitmap(WriteableImage, actualPoint);
+        ColorValue = color;
+        ColoredBrush = imageInformationExtractionService.ConvertColorToBrush(color);
+        Console.WriteLine($"Color value: {color.R}, {color.G}, {color.B}");
+        
     }
 }

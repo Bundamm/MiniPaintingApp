@@ -32,7 +32,8 @@ public partial class MainWindow : Window
 
                 if (DataContext is MainViewModel mainView)
                 {
-                    mainView.ImageView.ConvertPointCoordinatesToActualImagePixels(new Point(x, y), new Point(width, height));
+                    var pixelLocation = mainView.ImageView.ConvertPointCoordinatesToActualImagePixels(new Point(x, y), new Point(width, height));
+                    Console.WriteLine($"Pixel Location: {pixelLocation.X}, {pixelLocation.Y}");
                 }
             }
         }
