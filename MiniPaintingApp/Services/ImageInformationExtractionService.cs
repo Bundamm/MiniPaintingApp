@@ -1,17 +1,15 @@
 using System;
-using System.IO;
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
-
+using Avalonia.Platform;
 using MiniPaintingApp.Interfaces;
-using SkiaSharp;
 
 namespace MiniPaintingApp.Services;
 
 public class ImageInformationExtractionService : IImageInformationExtractionService {
 
-    public Point ConvertCursorLocationToPixelLocation(Point locationPoint, Point currentImageSize, WriteableBitmap bitmap)
+    public ValueTuple<int,int> ConvertCursorLocationToPixelLocation(Point locationPoint, Point currentImageSize, WriteableBitmap bitmap)
     {
         var bitmapWidth = bitmap.Size.Width;
         var bitmapHeight = bitmap.Size.Height;
@@ -21,28 +19,31 @@ public class ImageInformationExtractionService : IImageInformationExtractionServ
 
         var scaleWidth = bitmapWidth / currentImageWidth;
         var scaleHeight = bitmapHeight / currentImageHeight;
-        Console.WriteLine($"X Scale: {scaleWidth}, Y Scale: {scaleHeight}, Bitmap Width: {bitmapWidth}, Bitmap Height: {bitmapHeight} Current Image Width: {currentImageWidth}, Current Image Height: {currentImageHeight}");
-        var originalBitmapPoint = new Point(Math.Round(locationPoint.X * scaleWidth), Math.Round(locationPoint.Y * scaleHeight));
+        
+        var originalBitmapPoint = new ValueTuple<int,int>((int)Math.Round(locationPoint.X * scaleWidth), (int)Math.Round(locationPoint.Y * scaleHeight));
         
         return originalBitmapPoint;
     }
-    
-    public Color ExtractColorFromBitmap(WriteableBitmap bitmap, Point exactPointOnImage)
+
+    public unsafe Color ExtractColorFromBitmapUnsafe(WriteableBitmap bitmap, ValueTuple<int,int> exactPointOnImage)
     {
-        MemoryStream stream = new MemoryStream();
-        bitmap.Save(stream, options: new PngBitmapEncoderOptions());
-        stream.Position = 0;
-        SKBitmap skBitmap = SKBitmap.Decode(stream);
-        SKColor colorAtPosition = skBitmap.GetPixel((int)exactPointOnImage.X, (int)exactPointOnImage.Y);
-        byte red = colorAtPosition.Red;
-        byte green = colorAtPosition.Green;
-        byte blue = colorAtPosition.Blue;
-        byte alpha = colorAtPosition.Alpha;
-        return new Color(alpha, red, green, blue);
+        int pixelStride = 4;
+        int channels = 4;
+        using ILockedFramebuffer locked = bitmap.Lock();
+        nint channelAddress = locked.Address + exactPointOnImage.Item2 * locked.RowBytes + exactPointOnImage.Item1 * pixelStride;
+        byte*[] channelPointers = new byte*[channels];
+        for (int i = 0; i < channels; i++)
+        {
+            channelPointers[i] = (byte*)channelAddress.ToPointer() + i;
+        }
+        Color resultColor = new Color(a: *channelPointers[3], r: *channelPointers[2], g: *channelPointers[1],
+            b: *channelPointers[0]);
+        Console.WriteLine($"Color Result: {resultColor.R}, {resultColor.G}, {resultColor.B}");
+        return resultColor;
     }
     
     public IBrush ConvertColorToBrush(Color color)
     {
         return new SolidColorBrush(color);
     }
-}
+} 

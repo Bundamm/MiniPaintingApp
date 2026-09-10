@@ -25,7 +25,7 @@ public partial class ImageViewModel(IImageInformationExtractionService imageInfo
     public partial IBrush ColoredBrush {get; set;}
     
     [ObservableProperty]
-    public partial Point OriginalPoint { get; set; }
+    public partial ValueTuple<int,int> OriginalPoint { get; set; }
 
     [ObservableProperty]
     public partial string? ImagePath { get; set; }
@@ -44,29 +44,28 @@ public partial class ImageViewModel(IImageInformationExtractionService imageInfo
         return this.WriteableImage;
     }
     
-    public Point ConvertPointCoordinatesToActualImagePixels(Point cursorPoint, Point imageSize)
+    public ValueTuple<int,int> ConvertCoordinatesToActualImagePixels(Point cursorPoint, Point imageSize)
     {
         if (this.WriteableImage is null)
         {
             throw new InvalidOperationException("Image is null");
         }
-        Point imagePoint = imageInformationExtractionService.ConvertCursorLocationToPixelLocation(cursorPoint, imageSize, this.WriteableImage);
-        Console.WriteLine($"Location on original image: {imagePoint.X}, {imagePoint.Y}");
+        ValueTuple<int,int> imagePoint = imageInformationExtractionService.ConvertCursorLocationToPixelLocation(cursorPoint, imageSize, this.WriteableImage);
+        Console.WriteLine($"Location on original image: {imagePoint.Item1}, {imagePoint.Item2}");
         OriginalPoint = imagePoint;
         SetColorValue(OriginalPoint);
         return imagePoint;
     }
     
-    public void SetColorValue(Point actualPoint)
+    public void SetColorValue(ValueTuple<int,int> actualCoordinates)
     {
         if (this.WriteableImage is null)
         {
             throw new InvalidOperationException("Image is null");
         }
-        Color color = imageInformationExtractionService.ExtractColorFromBitmap(WriteableImage, actualPoint);
+        Color color = imageInformationExtractionService.ExtractColorFromBitmapUnsafe(WriteableImage, actualCoordinates);
         ColorValue = color;
         ColoredBrush = imageInformationExtractionService.ConvertColorToBrush(color);
-        Console.WriteLine($"Color value: {color.R}, {color.G}, {color.B}");
         
     }
 }
