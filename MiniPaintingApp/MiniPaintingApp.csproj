@@ -21,7 +21,9 @@
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2"/>
-        <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.151.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.12" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.12" />
+        <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
     </ItemGroup>
 
     <ItemGroup>

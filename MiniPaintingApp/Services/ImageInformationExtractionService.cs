@@ -36,6 +36,7 @@ public class ImageInformationExtractionService : IImageInformationExtractionServ
         {
             channelPointers[i] = (byte*)channelAddress.ToPointer() + i;
         }
+        //TODO: ADD OS CHECKING FOR PROPER FORMAT RECOGNITION
         Color resultColor = new Color(a: *channelPointers[3], r: *channelPointers[2], g: *channelPointers[1],
             b: *channelPointers[0]);
         Console.WriteLine($"Color Result: {resultColor.R}, {resultColor.G}, {resultColor.B}");
