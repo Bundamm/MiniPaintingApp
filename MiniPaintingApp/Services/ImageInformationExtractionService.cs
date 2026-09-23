@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -25,6 +26,7 @@ public class ImageInformationExtractionService : IImageInformationExtractionServ
         return originalBitmapPoint;
     }
 
+    //TODO: GET RID OF UNSAFE COPY THE BYTES TO LIST AND FIGURE OUT HOW TO FIX IT
     public unsafe Color ExtractColorFromBitmapUnsafe(WriteableBitmap bitmap, ValueTuple<int,int> exactPointOnImage)
     {
         int pixelStride = 4;
@@ -36,9 +38,17 @@ public class ImageInformationExtractionService : IImageInformationExtractionServ
         {
             channelPointers[i] = (byte*)channelAddress.ToPointer() + i;
         }
-        //TODO: ADD OS CHECKING FOR PROPER FORMAT RECOGNITION
-        Color resultColor = new Color(a: *channelPointers[3], r: *channelPointers[2], g: *channelPointers[1],
-            b: *channelPointers[0]);
+        Color resultColor;
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            resultColor = new Color(a: *channelPointers[3], r: *channelPointers[0], g: *channelPointers[1],
+                b: *channelPointers[2]);
+        }
+        else
+        {
+            resultColor = new Color(a: *channelPointers[3], r: *channelPointers[2], g: *channelPointers[1],
+                b: *channelPointers[0]);
+        }
         Console.WriteLine($"Color Result: {resultColor.R}, {resultColor.G}, {resultColor.B}");
         return resultColor;
     }
